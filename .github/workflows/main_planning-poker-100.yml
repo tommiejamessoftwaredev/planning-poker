@@ -46,6 +46,10 @@ jobs:
           cd deploy
           zip -r release.zip .
 
+      - name: List files for debug
+        run: |
+          ls -R
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
@@ -67,8 +71,12 @@ jobs:
         with:
           name: node-app
 
+      - name: List files for debug
+        run: |
+          ls -R
+
       - name: Unzip artifact for deployment
-        run: unzip deploy/release.zip -d deploy
+        run: unzip release.zip
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -83,4 +91,4 @@ jobs:
         with:
           app-name: 'planning-poker-100'
           slot-name: 'Production'
-          package: ./deploy/release.zip
+          package: release.zip
