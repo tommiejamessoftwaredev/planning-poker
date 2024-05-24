@@ -38,13 +38,16 @@ jobs:
           cp server/package.json deploy/server/
           cp server/package-lock.json deploy/server/
 
-      - name: List files for debug
+      - name: List files before zipping
         run: ls -R deploy
 
       - name: Zip artifact for deployment
         run: |
           cd deploy
           zip -r release.zip .
+
+      - name: List files after zipping
+        run: ls -R deploy
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -66,13 +69,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
-          path: deploy/release.zip
 
       - name: List files for debug
-        run: ls -R
+        run: |
+          ls -R
 
       - name: Unzip artifact for deployment
-        run: unzip deploy/release.zip -d deploy
+        run: unzip node-app/release.zip -d deploy
+
+      - name: List files after unzipping
+        run: ls -R deploy
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -87,4 +93,4 @@ jobs:
         with:
           app-name: 'planning-poker-100'
           slot-name: 'Production'
-          package: deploy/release.zip
+          package: deploy
