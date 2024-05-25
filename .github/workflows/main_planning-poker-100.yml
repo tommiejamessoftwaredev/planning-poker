@@ -75,7 +75,7 @@ jobs:
           ls -R
 
       - name: Unzip artifact for deployment
-        run: unzip node-app/release.zip -d deploy
+        run: unzip release.zip -d deploy
 
       - name: List files after unzipping
         run: ls -R deploy
