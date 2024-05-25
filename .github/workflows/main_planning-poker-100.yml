@@ -37,17 +37,15 @@ jobs:
           cp -r server/* deploy/server/
           cp server/package.json deploy/server/
           cp server/package-lock.json deploy/server/
-
-      - name: List files before zipping
-        run: ls -R deploy
+          echo "Files in deploy directory after copy:"
+          ls -R deploy
 
       - name: Zip artifact for deployment
         run: |
           cd deploy
           zip -r release.zip .
-
-      - name: List files after zipping
-        run: ls -R deploy
+          echo "Files in release.zip:"
+          unzip -l release.zip
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
