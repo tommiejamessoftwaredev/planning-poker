@@ -16,7 +16,7 @@ const io = new Server(server, {
 });
 
 app.use(cors({
-  origin: "http://localhost:3000"
+  origin: ["http://localhost:3000", "https://planning-poker-100.azurewebsites.net"]
 }));
 
 app.use(express.static(path.join(__dirname, '../planning-poker/build')));
