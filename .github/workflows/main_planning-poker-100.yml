@@ -19,12 +19,14 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies for React app
-        run: 
+        run: |
           cd client
           npm install
 
       - name: Build React app
-        run: npm run build
+        run: |
+          cd client
+          npm run build
 
       - name: Verify React build output
         run: ls -R client/build
