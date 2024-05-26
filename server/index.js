@@ -10,13 +10,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://planning-poker-100.azurewebsites.net"],
+    origin: ["http://localhost:3000", "https://planning-poker-100.azurewebsites.net", "https://planning-poker-100.scm.azurewebsites.net"],
     methods: ["GET", "POST"]
   }
 });
 
 app.use(cors({
-  origin: ["http://localhost:3000", "https://planning-poker-100.azurewebsites.net"]
+  origin: ["http://localhost:3000", "https://planning-poker-100.azurewebsites.net", "https://planning-poker-100.scm.azurewebsites.net"],
 }));
 
 app.use(express.static(path.join(__dirname, './build')));
