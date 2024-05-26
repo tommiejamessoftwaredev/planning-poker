@@ -1,3 +1,4 @@
+//src/App.tsx
 import React, { useState, useEffect } from 'react';
 import socket from './socket';
 import axios from 'axios';
