@@ -19,7 +19,7 @@ app.use(cors({
   origin: ["http://localhost:3000", "https://planning-poker-100.azurewebsites.net"]
 }));
 
-app.use(express.static(path.join(__dirname, '../planning-poker/build')));
+app.use(express.static(path.join(__dirname, './build')));
 
 app.get('/api', (req, res) => {
   res.send({ message: 'Hello from the server!' });
