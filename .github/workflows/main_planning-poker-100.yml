@@ -34,22 +34,24 @@ jobs:
 
       - name: Prepare artifact for deployment
         run: |
-          mkdir -p deploy/client
-          mkdir -p deploy/server
-          cp -r build/* deploy/client/
-          cp -r server/* deploy/server/
-          cp server/package.json deploy/server/
-          cp server/package-lock.json deploy/server/
-          echo "Files in deploy directory after copy:"
-          ls -R deploy
+          mkdir -p client
+          mkdir -p server
+          cp -r build/* client/
+          cp -r server/* server/
+          cp server/package.json server/
+          cp server/package-lock.json server/
+          echo "Files in client and server directories after copy:"
+          ls -R client
+          ls -R server
 
-      - name: Verify files in deploy directory
-        run: ls -R deploy
+      - name: Verify files in client and server directories
+        run: |
+          ls -R client
+          ls -R server
 
       - name: Zip artifact for deployment
         run: |
-          cd deploy
-          zip -r release.zip .
+          zip -r release.zip client server
           echo "Files in release.zip:"
           unzip -l release.zip
 
@@ -57,7 +59,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: deploy/release.zip
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,21 +75,16 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: node-app
-          path: deploy
+          path: release.zip
 
       - name: List files for debug after download
-        run: ls -R deploy
+        run: ls -R
 
       - name: Unzip artifact for deployment
-        run: unzip deploy/release.zip -d deploy
+        run: unzip release.zip -d .
 
       - name: List files after unzipping
-        run: ls -R deploy
-
-      - name: Move files to wwwroot
-        run: |
-          mv deploy/* .
-          ls -R
+        run: ls -R
 
       - name: Login to Azure
         uses: azure/login@v1
