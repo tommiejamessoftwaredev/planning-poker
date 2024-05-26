@@ -40,6 +40,9 @@ jobs:
           echo "Files in deploy directory after copy:"
           ls -R deploy
 
+      - name: Verify files in deploy directory
+        run: ls -R deploy
+
       - name: Zip artifact for deployment
         run: |
           cd deploy
@@ -92,3 +95,6 @@ jobs:
           app-name: 'planning-poker-100'
           slot-name: 'Production'
           package: deploy
+
+      - name: List deployed files for debug
+        run: ls -R deploy
