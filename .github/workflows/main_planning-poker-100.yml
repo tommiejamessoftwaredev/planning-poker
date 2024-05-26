@@ -24,6 +24,9 @@ jobs:
       - name: Build React app
         run: npm run build
 
+      - name: Verify React build output
+        run: ls -R build
+
       - name: Install dependencies for Node.js server
         run: |
           cd server
@@ -81,6 +84,11 @@ jobs:
       - name: List files after unzipping
         run: ls -R deploy
 
+      - name: Move files to wwwroot
+        run: |
+          mv deploy/* .
+          ls -R
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -94,7 +102,7 @@ jobs:
         with:
           app-name: 'planning-poker-100'
           slot-name: 'Production'
-          package: deploy
+          package: .
 
       - name: List deployed files for debug
-        run: ls -R deploy
+        run: ls -R
