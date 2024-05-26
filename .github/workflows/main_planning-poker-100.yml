@@ -19,27 +19,29 @@ jobs:
           node-version: '20.x'
 
       - name: Install dependencies for React app
-        run: npm install
+        run: 
+          cd client
+          npm install
 
       - name: Build React app
         run: npm run build
 
       - name: Verify React build output
-        run: ls -R build
+        run: ls -R client/build
 
       - name: Install dependencies for Node.js server
         run: |
-          cd server
+          cd ../server
           npm install
 
       - name: Prepare artifact for deployment
         run: |
           mkdir -p deploy/client
           mkdir -p deploy/server
-          cp -r build/* deploy/client/
-          cp -r server/* deploy/server/
-          cp server/package.json deploy/server/
-          cp server/package-lock.json deploy/server/
+          cp -r ../client/build/* deploy/client/
+          cp -r ./* deploy/server/  # Assuming server files are directly in the server directory
+          cp package.json deploy/server/
+          cp package-lock.json deploy/server/
           echo "Files in deploy directory after copy:"
           ls -R deploy
 
