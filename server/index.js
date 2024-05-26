@@ -4,7 +4,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,7 +19,7 @@ app.use(cors({
   origin: ["http://localhost:3000", "https://planning-poker-100.azurewebsites.net", "https://planning-poker-100.scm.azurewebsites.net"],
 }));
 
-app.use(express.static(path.join(__dirname, './build')));
+app.use(express.static(path.join(__dirname, './client/build')));
 
 app.get('/api', (req, res) => {
   res.send({ message: 'Hello from the server!' });
