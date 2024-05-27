@@ -90,7 +90,7 @@ jobs:
       - name: List files after unzipping
         run: ls -R deploy
 
-        - name: Move files to wwwroot
+      - name: Move files to wwwroot
         run: |
           mv deploy/* .
           ls -R
