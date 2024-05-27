@@ -4,7 +4,6 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const path = require("path");
-// const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 app.use(cors());
@@ -12,7 +11,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:3000",
+      "http://localhost:3001",
       "https://planning-poker-100.azurewebsites.net",
       "https://planning-poker-100.scm.azurewebsites.net",
     ],
@@ -20,20 +19,24 @@ const io = new Server(server, {
   },
 });
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://planning-poker-100.azurewebsites.net",
-      "https://planning-poker-100.scm.azurewebsites.net",
-    ],
-  })
-);
+// Serve static files from the client/build directory
+app.use(express.static(path.join(__dirname, "client", "build")));
 
-app.use(express.static(path.join(__dirname, "client")));
+// Define your other routes or middleware
 
 app.get("/api", (req, res) => {
   res.send({ message: "Hello from the server!" });
+});
+
+// Catch all other routes and serve index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "deploy", "client", "index.html"));
+});
+
+
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
 });
 
 const rooms = {};
@@ -129,12 +132,4 @@ io.on("connection", (socket) => {
     }
     console.log("user disconnected");
   });
-});
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client", "index.html"));
-});
-
-server.listen(8080, () => {
-  console.log("Server is listening on port 8080");
 });
