@@ -40,10 +40,10 @@ jobs:
         run: |
           mkdir -p deploy/client
           mkdir -p deploy/server
-          cp -r ../client/build/* deploy/client/
-          cp -r ./* deploy/server/  # Assuming server files are directly in the server directory
-          cp package.json deploy/server/
-          cp package-lock.json deploy/server/
+          cp -r client/build/* deploy/client/
+          cp -r server/* deploy/server/
+          cp server/package.json deploy/server/
+          cp server/package-lock.json deploy/server/
           echo "Files in deploy directory after copy:"
           ls -R deploy
 
