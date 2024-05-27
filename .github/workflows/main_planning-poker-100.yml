@@ -25,9 +25,9 @@ jobs:
           cd client
           npm install
 
-      - name: Set environment variables for production
-        run: |
-            echo "REACT_APP_API_URL=https://planning-poker-100.azurewebsites.net" > client/.env    
+          - name: Set environment variables for production
+          run: |
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > client/.env  
 
       - name: Build React app
         run: |
