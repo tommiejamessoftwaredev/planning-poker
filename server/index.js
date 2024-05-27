@@ -12,7 +12,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:3000",
+      "http://localhost:3001",
       "https://planning-poker-100.azurewebsites.net",
       "https://planning-poker-100.scm.azurewebsites.net",
     ],
@@ -23,7 +23,7 @@ const io = new Server(server, {
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
+      "http://localhost:3001",
       "https://planning-poker-100.azurewebsites.net",
       "https://planning-poker-100.scm.azurewebsites.net",
     ],
