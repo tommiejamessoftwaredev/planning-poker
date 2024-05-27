@@ -30,7 +30,7 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "client", "build")));
+app.use(express.static(path.join(__dirname, "client")));
 
 app.get("/api", (req, res) => {
   res.send({ message: "Hello from the server!" });
@@ -132,7 +132,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client", "build/index.html"));
+  res.sendFile(path.join(__dirname, "../client", "index.html"));
 });
 
 server.listen(8080, () => {
