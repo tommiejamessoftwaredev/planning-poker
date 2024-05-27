@@ -124,6 +124,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../planning-poker/build/index.html'));
 });
 
-server.listen(4000, () => {
-  console.log('listening on *:4000');
+server.listen(8080, () => {
+  console.log('Server is listening on port 8080');
 });
+
