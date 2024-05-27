@@ -27,7 +27,7 @@ jobs:
 
       # - name: Set environment variables for production
       #   run: |
-      #     echo "REACT_APP_API_URL=${{ secrets. }}" > client/.env
+      #     echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > client/.env
 
       - name: Set environment variables for production
         run: |
