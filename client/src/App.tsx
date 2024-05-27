@@ -65,7 +65,7 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api')
+    axios.get(`${process.env.REACT_APP_API_URL}/api`)
       .then(response => {
         setApiMessage(response.data.message);
       })
