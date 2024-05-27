@@ -40,9 +40,9 @@ jobs:
 
       - name: Prepare artifact for deployment
         run: |
-          mkdir -p deploy/client
+          mkdir -p deploy/client/build
           mkdir -p deploy/server
-          cp -r client/build/* deploy/client/
+          cp -r client/build/* deploy/client/build/
           cp -r server/* deploy/server/
           cp server/package.json deploy/server/
           cp server/package-lock.json deploy/server/
@@ -92,7 +92,8 @@ jobs:
 
       - name: Move files to wwwroot
         run: |
-          mv deploy/* .
+          mv deploy/client ./client
+          mv deploy/server/* ./server/
           ls -R
 
       - name: Login to Azure
