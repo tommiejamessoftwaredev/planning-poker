@@ -43,13 +43,14 @@
 }
 
 .player-card {
-  width: 30px;
-  height: 40px;
+  width: 200px;
+  height: 240px;
   margin-right: 10px;
   transition: transform 0.3s ease-in-out;
+  transition: 1s;
 }
 
-.player-card.revealed {
+.player-card.unrevealed {
   transform: rotateY(180deg);
 }
 
