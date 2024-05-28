@@ -1,7 +1,8 @@
-//src/App.tsx
 import React, { useState, useEffect } from 'react';
 import socket from './socket';
 import axios from 'axios';
+import { Container, Row, Col, Form, Button, Card, ListGroup } from 'react-bootstrap';
+import './App.css';
 
 interface Room {
   host: string;
@@ -127,74 +128,77 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Planning Poker</h1>
+    <Container className="app-container">
+      <h1 className="text-center my-4">Planning Poker</h1>
       {!room ? (
-        <div>
-          <input
-            type="text"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            placeholder="Enter player name"
-          />
-          <button onClick={createRoom}>Host Room</button>
-          <input
-            type="text"
-            value={roomCode}
-            onChange={(e) => setRoomCode(e.target.value)}
-            placeholder="Enter room code"
-          />
-          <button onClick={joinRoom}>Join Room</button>
+        <div className="room-form">
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              placeholder="Enter player name"
+            />
+          </Form.Group>
+          <Button onClick={createRoom} className="mb-3" variant="primary">Host Room</Button>
+          <Form.Group className="mb-3">
+            <Form.Control
+              type="text"
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value)}
+              placeholder="Enter room code"
+            />
+          </Form.Group>
+          <Button onClick={joinRoom} className="mb-3" variant="primary">Join Room</Button>
         </div>
       ) : (
-        <div>
+        <div className="room-container">
           <h2>Room Code: {roomCode}</h2>
           <p>{message}</p>
           <div>
             {room.host === socket.id && (
-              <div>
-                <button onClick={revealVotes} disabled={Object.keys(room.players).length !== Object.keys(room.votes).length}>
+              <div className="host-controls">
+                <Button onClick={revealVotes} className="mb-3" variant="success" disabled={Object.keys(room.players).length !== Object.keys(room.votes).length}>
                   Reveal Votes
-                </button>
-                <button onClick={resetRoom}>Reset Room</button>
+                </Button>
+                <Button onClick={resetRoom} className="mb-3" variant="warning">Reset Room</Button>
                 <h3>Players:</h3>
-                <ul>
+                <ListGroup>
                   {Object.values(room.players).map((playerName, index) => (
-                    <li key={index}>{playerName}</li>
+                    <ListGroup.Item key={index}>{playerName}</ListGroup.Item>
                   ))}
-                </ul>
+                </ListGroup>
               </div>
             )}
-            <button onClick={leaveRoom}>Leave Room</button>
+            <Button onClick={leaveRoom} className="mt-3" variant="danger">Leave Room</Button>
           </div>
-          <div>
+          <div className="votes-container mt-4">
             <h3>Votes:</h3>
-            <ul>
+            <ListGroup>
               {Object.entries(room.votes).map(([playerId, vote], index) => (
-                <li key={index}>{room.players[playerId]}: {room.revealed ? vote : 'Hidden'}</li>
+                <ListGroup.Item key={index}>{room.players[playerId]}: {room.revealed ? vote : 'Hidden'}</ListGroup.Item>
               ))}
-            </ul>
+            </ListGroup>
           </div>
-          <div>
+          <div className="vote-buttons mt-4">
             <h3>Your Vote: {selectedVote}</h3>
-            <button onClick={() => castVote('0')}>0</button>
-            <button onClick={() => castVote('1')}>1</button>
-            <button onClick={() => castVote('2')}>2</button>
-            <button onClick={() => castVote('3')}>3</button>
-            <button onClick={() => castVote('5')}>5</button>
-            <button onClick={() => castVote('8')}>8</button>
-            <button onClick={() => castVote('13')}>13</button>
-            <button onClick={() => castVote('20')}>20</button>
-            <button onClick={() => castVote('40')}>40</button>
-            <button onClick={() => castVote('100')}>100</button>
+            <Row>
+              {['0', '1', '2', '3', '5', '8', '13', '20', '40', '100'].map((vote, index) => (
+                <Col key={index} xs={6} sm={4} md={2} className="mb-2">
+                  <Button onClick={() => castVote(vote)} className="vote-button" variant="outline-primary">
+                    <img src={`/images/cards/${vote}.png`} alt={`Vote ${vote}`} className="img-fluid" />
+                  </Button>
+                </Col>
+              ))}
+            </Row>
           </div>
         </div>
       )}
-      <div>
+      <div className="api-message mt-4">
         <h3>API Message:</h3>
         <p>{apiMessage}</p>
       </div>
-    </div>
+    </Container>
   );
 };
 
