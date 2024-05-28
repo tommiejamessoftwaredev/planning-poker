@@ -12,6 +12,12 @@
   text-align: center;
 }
 
+.players-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .host-controls {
   margin-bottom: 20px;
 }
@@ -22,12 +28,34 @@
   flex-wrap: wrap;
 }
 
+.vote-button {
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}
+
+.vote-button.selected {
+  transform: translateY(-30px) scale(1.5);
+}
+
 .vote-button img {
   width: 100%;
   height: auto;
 }
 
-.api-message {
+.player-card {
+  width: 30px;
+  height: 40px;
+  margin-right: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.player-card.revealed {
+  transform: rotateY(180deg);
+}
+
+.average-vote {
   margin-top: 20px;
   text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
 }

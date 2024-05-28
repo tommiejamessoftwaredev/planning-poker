@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import socket from './socket';
 import axios from 'axios';
-import { Container, Row, Col, Form, Button, Card, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, ListGroup } from 'react-bootstrap';
 import './App.css';
 
 interface Room {
@@ -16,8 +16,8 @@ const App: React.FC = () => {
   const [playerName, setPlayerName] = useState<string>('');
   const [room, setRoom] = useState<Room | null>(null);
   const [message, setMessage] = useState<string>('');
-  const [apiMessage, setApiMessage] = useState<string>('');
   const [selectedVote, setSelectedVote] = useState<string>('');
+  const [averageVote, setAverageVote] = useState<number | null>(null);
 
   useEffect(() => {
     socket.on('room-created', ({ roomCode, playerName }) => {
@@ -39,6 +39,7 @@ const App: React.FC = () => {
 
     socket.on('room-reset', () => {
       setSelectedVote('');
+      setAverageVote(null);
     });
 
     socket.on('room-closed', () => {
@@ -68,7 +69,7 @@ const App: React.FC = () => {
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/api`)
       .then(response => {
-        setApiMessage(response.data.message);
+        console.log(response.data.message);
       })
       .catch(error => {
         console.error('There was an error making the GET request!', error);
@@ -92,11 +93,12 @@ const App: React.FC = () => {
   };
 
   const castVote = (vote: string) => {
-    if (!room?.revealed) {
+    if (selectedVote === vote) {
+      setSelectedVote('');
+      socket.emit('vote', '');
+    } else {
       setSelectedVote(vote);
       socket.emit('vote', vote);
-    } else {
-      alert('Votes have been revealed, you cannot change your vote.');
     }
   };
 
@@ -105,6 +107,9 @@ const App: React.FC = () => {
       const allPlayersVoted = Object.keys(room.players).length === Object.keys(room.votes).length;
       if (allPlayersVoted) {
         socket.emit('reveal-votes');
+        const votes = Object.values(room.votes).map(vote => parseInt(vote));
+        const average = votes.reduce((a, b) => a + b, 0) / votes.length;
+        setAverageVote(average);
       } else {
         alert('Not all players have voted.');
       }
@@ -113,6 +118,7 @@ const App: React.FC = () => {
 
   const resetRoom = () => {
     setSelectedVote('');
+    setAverageVote(null);
     socket.emit('reset-room');
   };
 
@@ -163,41 +169,36 @@ const App: React.FC = () => {
                 </Button>
                 <Button onClick={resetRoom} className="mb-3" variant="warning">Reset Room</Button>
                 <h3>Players:</h3>
-                <ListGroup>
-                  {Object.values(room.players).map((playerName, index) => (
-                    <ListGroup.Item key={index}>{playerName}</ListGroup.Item>
+                <ListGroup className="players-list">
+                  {Object.entries(room.players).map(([playerId, playerName], index) => (
+                    <ListGroup.Item key={index} className="d-flex align-items-center justify-content-center">
+                      <img src={`/images/cards/${room.votes[playerId] || 'back'}.png`} alt={`Card of ${playerName}`} className={`player-card ${room.revealed ? 'revealed' : ''}`} />
+                      {playerName}
+                    </ListGroup.Item>
                   ))}
                 </ListGroup>
               </div>
             )}
-            <Button onClick={leaveRoom} className="mt-3" variant="danger">Leave Room</Button>
           </div>
-          <div className="votes-container mt-4">
-            <h3>Votes:</h3>
-            <ListGroup>
-              {Object.entries(room.votes).map(([playerId, vote], index) => (
-                <ListGroup.Item key={index}>{room.players[playerId]}: {room.revealed ? vote : 'Hidden'}</ListGroup.Item>
-              ))}
-            </ListGroup>
-          </div>
+          {room.revealed && averageVote !== null && (
+            <div className="average-vote">
+              <h3>Average Vote: {averageVote.toFixed(2)}</h3>
+            </div>
+          )}
           <div className="vote-buttons mt-4">
-            <h3>Your Vote: {selectedVote}</h3>
             <Row>
               {['0', '1', '2', '3', '5', '8', '13', '20', '40', '100'].map((vote, index) => (
-                <Col key={index} xs={6} sm={4} md={2} className="mb-2">
-                  <Button onClick={() => castVote(vote)} className="vote-button" variant="outline-primary">
+                <Col key={index} xs={4} sm={3} md={2} className="mb-2">
+                  <Button onClick={() => castVote(vote)} className={`vote-button ${selectedVote === vote ? 'selected' : ''}`} variant="outline-primary" disabled={room.revealed}>
                     <img src={`/images/cards/${vote}.png`} alt={`Vote ${vote}`} className="img-fluid" />
                   </Button>
                 </Col>
               ))}
             </Row>
           </div>
+          <Button onClick={leaveRoom} className="mt-3 mb-3" variant="danger">Leave Room</Button>
         </div>
       )}
-      <div className="api-message mt-4">
-        <h3>API Message:</h3>
-        <p>{apiMessage}</p>
-      </div>
     </Container>
   );
 };
