@@ -172,7 +172,7 @@ const App: React.FC = () => {
                 <ListGroup className="players-list">
                   {Object.entries(room.players).map(([playerId, playerName], index) => (
                     <ListGroup.Item key={index} className="d-flex align-items-center justify-content-center">
-                      <img src={`/images/cards/${room.votes[playerId] || 'back'}.png`} alt={`Card of ${playerName}`} className={`player-card ${room.revealed ? 'revealed' : ''}`} />
+                      <img src={`/images/cards/${room.votes[playerId] || 'back'}.webp`} alt={`Card of ${playerName}`} className={`player-card ${room.revealed ? 'revealed' : ''}`} />
                       {playerName}
                     </ListGroup.Item>
                   ))}
@@ -190,7 +190,7 @@ const App: React.FC = () => {
               {['0', '1', '2', '3', '5', '8', '13', '20', '40', '100'].map((vote, index) => (
                 <Col key={index} xs={4} sm={3} md={2} className="mb-2">
                   <Button onClick={() => castVote(vote)} className={`vote-button ${selectedVote === vote ? 'selected' : ''}`} variant="outline-primary" disabled={room.revealed}>
-                    <img src={`/images/cards/${vote}.png`} alt={`Vote ${vote}`} className="img-fluid" />
+                    <img src={`/images/cards/${vote}.webp`} alt={`Vote ${vote}`} className="img-fluid" />
                   </Button>
                 </Col>
               ))}
