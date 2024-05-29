@@ -13,6 +13,7 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:3000",
+      "http://localhost:3001",
       "https://planning-poker-100.azurewebsites.net",
       "https://planning-poker-100.scm.azurewebsites.net",
     ],
@@ -76,18 +77,28 @@ io.on("connection", (socket) => {
   socket.on("vote", (vote) => {
     const roomCode = socket.roomCode;
     if (roomCode && rooms[roomCode] && !rooms[roomCode].revealed) {
-      rooms[roomCode].votes[socket.id] = vote;
+      if (vote === '') {
+        delete rooms[roomCode].votes[socket.id];
+      } else {
+        rooms[roomCode].votes[socket.id] = vote;
+      }
       io.to(roomCode).emit("room-updated", rooms[roomCode]);
     }
   });
-
+  
   socket.on("reveal-votes", () => {
     const roomCode = socket.roomCode;
     if (roomCode && rooms[roomCode] && rooms[roomCode].host === socket.id) {
-      rooms[roomCode].revealed = true;
-      io.to(roomCode).emit("room-updated", rooms[roomCode]);
+      const allPlayersVoted = Object.keys(rooms[roomCode].players).length === Object.keys(rooms[roomCode].votes).length;
+      if (allPlayersVoted) {
+        rooms[roomCode].revealed = true;
+        io.to(roomCode).emit("room-updated", rooms[roomCode]);
+      } else {
+        socket.emit("error", "Not all players have voted.");
+      }
     }
   });
+  
 
   socket.on("reset-room", () => {
     const roomCode = socket.roomCode;

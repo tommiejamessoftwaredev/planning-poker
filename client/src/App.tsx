@@ -34,6 +34,8 @@ const App: React.FC = () => {
       setRoom(room);
       if (socket.id && room.votes[socket.id]) {
         setSelectedVote(room.votes[socket.id]);
+      } else {
+        setSelectedVote('');
       }
     });
 
@@ -162,28 +164,30 @@ const App: React.FC = () => {
           <h2>Room Code: {roomCode}</h2>
           <p>{message}</p>
           <div>
-            {room.host === socket.id && (
-              <div className="host-controls">
-                <Button onClick={revealVotes} className="mb-3" variant="success" disabled={Object.keys(room.players).length !== Object.keys(room.votes).length}>
-                  Reveal Votes
-                </Button>
-                <Button onClick={resetRoom} className="mb-3" variant="warning">Reset Room</Button>
-                <h3>Players:</h3>
-                <ListGroup className="players-list">
-                  {Object.entries(room.players).map(([playerId, playerName], index) => (
-                    <ListGroup.Item key={index} className="d-flex align-items-center justify-content-center">
-                      {playerId === room.host && <span className="host-badge">Host: </span>}
-                      {playerName}
-                      {selectedVote !== '' && (
-                        <img src={`images/cards/${room.revealed ? `${room.votes[playerId]}.webp` : 'back.webp'}`}
-                          alt={`Card of ${playerName}`}
-                          className={`player-card ${room.revealed ? '' : 'unrevealed'}`} />
-                      )}
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
-              </div>
-            )}
+            <div className="host-controls">
+              {room.host === socket.id && (
+                <>
+                  <Button onClick={revealVotes} className="mb-3" variant="success" disabled={Object.keys(room.players).length !== Object.keys(room.votes).length}>
+                    Reveal Votes
+                  </Button>
+                  <Button onClick={resetRoom} className="mb-3" variant="warning">Reset Room</Button>
+                </>
+              )}
+              <h3>Players:</h3>
+              <ListGroup className="players-list">
+                {Object.entries(room.players).map(([playerId, playerName], index) => (
+                  <ListGroup.Item key={index} className="d-flex align-items-center justify-content-center">
+                    {playerId === room.host && <span className="host-badge">Host: </span>}
+                    {playerName}
+                    {room.votes[playerId] !== undefined && (
+                      <img src={`images/cards/${room.revealed ? `${room.votes[playerId]}.webp` : 'back.webp'}`}
+                        alt={`Card of ${playerName}`}
+                        className={`player-card ${room.revealed ? '' : 'unrevealed'}`} />
+                    )}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </div>
           </div>
           {room.revealed && averageVote !== null && (
             <div className="average-vote">
