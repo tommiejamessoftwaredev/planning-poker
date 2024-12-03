@@ -11,9 +11,14 @@ A single page React Typescript App, with an express.js backend, using Socket.io 
 
 ### 4. `cd ../server`
 ### 5. `npm install`
-### 6. `npm start` - starts the local server which 
+### 6. `npm start` - starts the local server that serves the built client
 
-Runs the app in the development mode.\
 Open [http://localhost:8080/](http://localhost:8080/) to view it in the browser.
 
 
+
+
+## Latest Deployment
+Whenever branch ```main``` is updated, it's automatically deployed using github actions to the azure app service where it's hosted:
+
+[https://planning-poker-100.azurewebsites.net/](https://planning-poker-100.azurewebsites.net/) 
